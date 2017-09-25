@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.csbe.web.cms.pub.mapper.IPubMapper">
+	
+	<select id="getCityById" resultType="cn.csbe.web.cms.pub.bean.PubCity"
+		parameterType="java.lang.Integer">
+		select * from pub_city where id = #{id}
+	</select>
+	
+	<select id="getCitys" resultType="cn.csbe.web.cms.pub.bean.PubCity"
+		parameterType="cn.csbe.web.cms.pub.bean.PubCity">
+		select * from pub_city where pid = 0
+	</select>
+
+	<select id="getCityByPid" resultType="cn.csbe.web.cms.pub.bean.PubCity"
+		parameterType="java.lang.Integer">
+		select * from pub_city where pid = #{pid}
+	</select>
+
+
+	<select id="getCategorys" resultType="cn.csbe.web.cms.pub.bean.PubCategory">
+		select * from pub_category where status = 1
+	</select>
+	
+	<select id="getEnterprise" resultType="cn.csbe.web.cms.pub.bean.PubEnterprise">
+		select enterpriseId,name from pub_enterprise where status = 1
+	</select>
+	
+	<select id="getCategoryByPid" resultType="cn.csbe.web.cms.pub.bean.PubCategory"
+		parameterType="java.lang.Integer">
+		select * from pub_category
+		where parentId = #{parentId} and status = 1
+	</select>
+
+	<select id="getCategoryById" resultType="cn.csbe.web.cms.pub.bean.PubCategory"
+		parameterType="java.lang.Integer">
+		select * from pub_category
+		where categoryId = #{categoryId} and status = 1
+	</select>
+
+
+
+	<!-- 新增分类信息 -->
+	<insert id="insertCategory" parameterType="cn.csbe.web.cms.pub.bean.PubCategory">
+		insert into pub_category
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="categoryName != null">
+				categoryName,
+			</if>
+			<if test="parentId != null">
+				parentId,
+			</if>
+			<if test="picture != null">
+				picture,
+			</if>
+			<if test="status != null">
+				status,
+			</if>
+		</trim>
+
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="categoryName != null">
+				#{categoryName},
+			</if>
+			<if test="parentId != null">
+				#{parentId},
+			</if>
+			<if test="picture != null">
+				#{picture},
+			</if>
+			<if test="status != null">
+				#{status},
+			</if>
+
+		</trim>
+
+	</insert>
+	
+	<!-- 更新分类信息 -->
+	<update id="updateCategory" parameterType="cn.csbe.web.cms.pub.bean.PubCategory">
+		update pub_category
+		<set>
+			<if test="categoryName != null">
+				categoryName = #{categoryName},
+			</if>
+			<if test="parentId != null">
+				parentId = #{parentId},
+			</if>
+			<if test="picture != null">
+				picture = #{picture},
+			</if>
+			<if test="status != null">
+				status = #{status},
+			</if>
+		</set>
+		where categoryId = #{categoryId}
+	</update>
+</mapper>

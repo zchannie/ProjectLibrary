@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.csbe.web.cms.auth.mapper.IAuthMapper">
+
+	<select id="login" resultType="cn.csbe.web.cms.auth.bean.UserPassword" parameterType="cn.csbe.web.cms.auth.bean.UserPassword">
+		SELECT a.*, GROUP_CONCAT(b.roleId) roleId
+		FROM user_password a
+		LEFT JOIN user_role_relation b ON (a.userId = b.userId)
+		where a.phone = #{username} and a.pwd = #{pwd} and a.status = 1
+		group by a.userid
+	</select>
+
+	<select id="getUserPasswordByUserName" parameterType="java.lang.String" resultType="cn.csbe.web.cms.auth.bean.UserPassword">
+		select * from user_password where phone=#{value} and status = 1
+	</select>
+	
+	<select id="getUserPermissionByUserId" parameterType="java.lang.Long" resultType="cn.csbe.web.cms.auth.bean.UserRoleMenu">
+		SELECT ur.relationId, ur.userId, ur.roleId, mr.menuId, r.menuName, r.url, pr.menuName as pmenuName, pr.menuId as pmenuId
+		FROM user_role_relation ur LEFT JOIN rights_menu_role_relation mr ON ur.roleId = mr.roleId 
+		LEFT JOIN rights_menu r ON r.menuId = mr.menuId LEFT JOIN rights_menu pr ON r.parentId = pr.menuId 
+		WHERE ur.`status` = 1 AND mr.`status`=1 AND r.`status`=1 AND pr.`status`=1 AND r.platFormId=1 AND ur.userId = #{value} 
+		ORDER BY pr.orderNo,r.orderNo
+	</select>
+	
+	<select id="getUserPermissionByUserName" parameterType="java.lang.String" resultType="cn.csbe.web.cms.auth.bean.UserRoleMenu">
+		SELECT ur.relationId, ur.userId, ur.roleId, mr.menuId, r.menuName, r.url, pr.menuName as pmenuName, pr.menuId as pmenuId 
+		FROM user_role_relation ur LEFT JOIN user_password u ON u.userId = ur.userId LEFT JOIN rights_menu_role_relation mr ON ur.roleId = mr.roleId 
+		LEFT JOIN rights_menu r ON r.menuId = mr.menuId LEFT JOIN rights_menu pr ON r.parentId = pr.menuId 
+		WHERE ur.`status` = 1 AND mr.`status`=1 AND r.`status`=1 AND pr.`status`=1 AND r.platFormId=1 AND u.phone = #{value} 
+		ORDER BY pr.orderNo,r.orderNo
+	</select>
+</mapper>

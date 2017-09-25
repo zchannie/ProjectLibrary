@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.csbe.web.cms.news.mapper.IPubNewsMapper">
+
+
+	<select id="findById" resultType="cn.csbe.web.cms.news.bean.PubNews"
+		parameterType="java.lang.Integer">
+		select * from pub_news a
+		WHERE a.newsid = #{newsid}
+	</select>
+
+	<select id="findByPage" resultType="cn.csbe.web.cms.news.bean.PubNews"
+		parameterType="cn.csbe.web.cms.news.bean.PubNews">
+		select * from pub_news a
+		<where>
+			<trim prefix="(" suffix=")" prefixOverrides="or">
+
+				<if test="newsTitle != null">
+					or a.newsTitle like CONCAT('%',#{newsTitle},'%' )
+				</if>
+			</trim>
+			and a.status = 1
+		</where>
+		<!-- ORDER BY PinYinInitial -->
+		order by publishDate desc
+		LIMIT #{beginIndex},#{rows}
+	</select>
+
+	<select id="findMaxId" resultType="java.lang.Integer">
+		select max(newsid) from
+		pub_news
+	</select>
+
+	<select id="findCount" resultType="java.lang.Long"
+		parameterType="cn.csbe.web.cms.news.bean.PubNews">
+		select count(0) from pub_news a
+		<where>
+			<trim prefix="(" suffix=")" prefixOverrides="or">
+
+				<if test="newsTitle != null">
+					or a.newsTitle like CONCAT('%',#{newsTitle},'%' )
+				</if>
+			</trim>
+			and a.status = 1
+		</where>
+	</select>
+
+
+
+	<insert id="insert" parameterType="cn.csbe.web.cms.news.bean.PubNews">
+		insert into pub_news
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="newsTitle != null">
+				newsTitle,
+			</if>
+			<if test="newsIntroduction != null">
+				newsIntroduction,
+			</if>
+			<if test="type != null">
+				type,
+			</if>
+			<if test="htmlUrl != null">
+				htmlUrl,
+			</if>
+			<if test="picture != null">
+				picture,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="newsTitle != null">
+				#{newsTitle},
+			</if>
+			<if test="newsIntroduction != null">
+				#{newsIntroduction},
+			</if>
+			<if test="type != null">
+				#{type},
+			</if>
+			<if test="htmlUrl != null">
+				#{htmlUrl},
+			</if>
+			<if test="picture != null">
+				#{picture},
+			</if>
+		</trim>
+	</insert>
+
+
+	<update id="update" parameterType="cn.csbe.web.cms.news.bean.PubNews">
+		update pub_news
+		<set>
+			<if test="newsTitle != null">
+				newsTitle = #{newsTitle},
+			</if>
+			<if test="newsIntroduction != null">
+				newsIntroduction = #{newsIntroduction},
+			</if>
+			<if test="type != null">
+				type = #{type},
+			</if>
+			<if test="picture != null">
+				picture = #{picture},
+			</if>
+			<if test="htmlUrl != null">
+				htmlUrl = #{htmlUrl},
+			</if>
+			<if test="status != null">
+				status = #{status},
+			</if>
+		</set>
+		where newsid = #{newsid}
+	</update>
+</mapper>

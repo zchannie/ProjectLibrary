@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+	 	http://www.springframework.org/schema/beans/spring-beans.xsd
+	 	http://www.springframework.org/schema/mvc
+	 	http://www.springframework.org/schema/mvc/spring-mvc-3.1.xsd
+	 	http://www.springframework.org/schema/context
+ http://www.springframework.org/schema/context/spring-context-3.1.xsd">
+	<!-- 配置springmvc -->
+	<!-- 1:开启springmvc注解模式 -->
+	<!-- 简化配置: (1)自动注册DefaultAnnotationHandlerMapping,AnnotationMethodHandlerAdapter 
+		(2)提供一系列:数据绑定,数字和日期的format @NumberFormat,@DataTimeFormat,xml,json默认读写支持 -->
+	<mvc:annotation-driven />
+	<!-- servlet-mapping 映射路径:"/" -->
+	<!-- 2:静态资源默认servlet配置 1:加入对静态资源的处理:js,gif,png 2:允许使用"/"做整体映射 -->
+	<mvc:default-servlet-handler />
+
+	<!-- 3:配置jsp 显示ViewResolver -->
+	<bean
+		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<property name="viewClass"
+			value="org.springframework.web.servlet.view.JstlView"></property>
+		<property name="prefix" value="/WEB-INF/jsp/"></property>
+		<property name="suffix" value=".jsp"></property>
+	</bean>
+
+	<!-- 4:扫描web相关的bean -->
+	<context:component-scan base-package="cn.csbe.web.cms.*.controller" />
+
+	<!-- SpringMVC上传文件时，需要配置MultipartResolver处理器 -->
+	<bean id="multipartResolver"
+		class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+		<property name="defaultEncoding" value="UTF-8" />
+	</bean>
+	
+	 <!-- 自定义Realm -->
+    <bean id="myRealm" class="cn.csbe.web.cms.auth.controller.MyRealm" /> 
+    
+    <!-- 安全管理器 -->
+    <bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">  
+      <property name="realm" ref="myRealm"/>  
+    </bean>
+    
+    <!-- Shiro过滤器 -->
+    <bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">  
+        <!-- Shiro的核心安全接口,这个属性是必须的 -->  
+        <property name="securityManager" ref="securityManager"/>
+        <!-- 身份认证失败，则跳转到登录页面的配置 -->  
+        <property name="loginUrl" value="/login.jsp"/>
+        <!-- 权限认证失败，则跳转到指定页面 -->  
+        <property name="unauthorizedUrl" value="unauthorized.jsp"/>  
+        <!-- Shiro连接约束配置,即过滤链的定义 -->  
+        <property name="filterChainDefinitions">  
+            <value>
+            	/css/** = anon
+            	/easyui/** = anon
+            	/bootstrap/** = anon
+            	/ckeditor/** = anon
+            	/um/** = anon
+				/images/** = anon
+				/js/** = anon
+            	/login.jsp=anon
+                /login=anon
+                /logout=anon
+                /unauthorizedUrl=anon
+                /**/**=authc
+            </value>  
+        </property>
+    </bean>
+    
+    <!-- 保证实现了Shiro内部lifecycle函数的bean执行 -->  
+    <bean id="lifecycleBeanPostProcessor" class="org.apache.shiro.spring.LifecycleBeanPostProcessor" />
+    
+    <!-- 支持Shiro对Controller的方法级AOP安全控制 begin-->
+	<bean class="org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator" depends-on="lifecycleBeanPostProcessor">
+		<property name="proxyTargetClass" value="true" />
+	</bean>
+    
+    <!-- 开启Shiro注解 -->
+    <bean class="org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator" depends-on="lifecycleBeanPostProcessor"/>  
+        <bean class="org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor">  
+      <property name="securityManager" ref="securityManager"/>  
+    </bean> 
+</beans>

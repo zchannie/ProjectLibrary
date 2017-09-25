@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project-module
+  type="WEB"
+  name="buddha-bms"
+  id="myeclipse.1484623622449"
+  context-root="/buddha-bms"
+  j2ee-spec="1.7"
+  archive="buddha-bms.war">
+  <attributes>
+    <attribute name="webrootdir" value="src/main/webapp" />
+  </attributes>
+</project-module>
+

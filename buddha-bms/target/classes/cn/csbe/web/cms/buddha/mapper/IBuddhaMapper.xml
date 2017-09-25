@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.csbe.web.cms.buddha.mapper.IBuddhaMapper">
+
+
+	<select id="findById" resultType="cn.csbe.web.cms.buddha.bean.Buddha"
+		parameterType="java.lang.Integer">
+		select * from buddha a
+		WHERE a.buddhaId = #{buddhaId}
+	</select>
+
+	<select id="findByPage" resultType="cn.csbe.web.cms.buddha.bean.Buddha"
+		parameterType="cn.csbe.web.cms.buddha.bean.Buddha">
+		select b.buddhaId,b.buddhaName,b.imgUrl,b.createTime from buddha b
+		<where>
+			<trim prefix="(" suffix=")" prefixOverrides="or">
+				<if test="buddhaName != null">
+					or b.buddhaName like CONCAT('%',#{buddhaName},'%' )
+				</if>
+
+			</trim>
+			and b.status = 1
+		</where>
+		<!-- ORDER BY PinYinInitial -->
+		order by createTime desc
+		LIMIT #{beginIndex},#{rows}
+	</select>
+
+	<select id="findMaxId" resultType="java.lang.Integer">
+		select max(buddhaId) from buddha
+	</select>
+
+	<select id="findCount" resultType="java.lang.Long"
+		parameterType="cn.csbe.web.cms.buddha.bean.Buddha">
+		select count(0) from buddha a
+		<where>
+			<trim prefix="(" suffix=")" prefixOverrides="or">
+				<if test="buddhaName != null">
+					or a.buddhaName like CONCAT('%',#{buddhaName},'%' )
+				</if>
+			</trim>
+			and a.status = 1
+		</where>
+	</select>
+
+	<insert id="insert" parameterType="cn.csbe.web.cms.buddha.bean.Buddha">
+		insert into buddha
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="buddhaId != null">
+				buddhaId,
+			</if>
+			<if test="buddhaName != null">
+				buddhaName,
+			</if>
+			<if test="imgUrl != null">
+				imgUrl,
+			</if>
+			<if test="content != null">
+				content,
+			</if>
+			<if test="createTime != null">
+				createTime,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="buddhaId != null">
+				#{buddhaId},
+			</if>
+			<if test="buddhaName != null">
+				#{buddhaName},
+			</if>
+			<if test="imgUrl != null">
+				#{imgUrl},
+			</if>
+			<if test="content != null">
+				#{content},
+			</if>
+			<if test="createTime != null">
+				#{createTime},
+			</if>
+		</trim>
+	</insert>
+
+	<update id="update" parameterType="cn.csbe.web.cms.buddha.bean.Buddha">
+		update buddha
+		<set>
+			<if test="buddhaName != null">
+				buddhaName = #{buddhaName},
+			</if>
+			<if test="imgUrl != null">
+				imgUrl = #{imgUrl},
+			</if>
+			<if test="content != null">
+				content = #{content},
+			</if>
+			<if test="updateTime != null">
+				updateTime = #{updateTime},
+			</if>
+			<if test="status != null">
+				status = #{status},
+			</if>
+		</set>
+		where buddhaId = #{buddhaId}
+	</update>
+</mapper>

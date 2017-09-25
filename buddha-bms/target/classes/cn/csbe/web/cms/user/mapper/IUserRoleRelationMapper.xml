@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.csbe.web.cms.user.mapper.IUserRoleRelationMapper">
+
+<!-- 	<update id="updateRelation" parameterType="cn.csbe.web.cms.user.bean.UserRoleRelation">
+		update user_role_relation set
+		status = #{status} where userId = #{userId} and roleId = #{roleId}
+	</update> -->
+
+	<!-- <select id="findRole" resultType="java.lang.String"
+		parameterType="cn.csbe.web.cms.apply.bean.UserApply">
+		select group_concat(b.roleName) from user_role_relation a
+		left join csbe_role b on (a.roleId = b.roleId)
+		where a.userId = #{userId} and a.status = 1
+	</select> -->
+</mapper>

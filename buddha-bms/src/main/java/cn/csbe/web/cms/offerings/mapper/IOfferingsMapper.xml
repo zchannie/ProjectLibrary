@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.csbe.web.cms.offerings.mapper.IOfferingsMapper">
+
+	<select id="findById" resultType="cn.csbe.web.cms.offerings.bean.Offerings"
+		parameterType="java.lang.Integer">
+
+		select * from offerings a
+		WHERE a.offeringsId =
+		#{offeringsId}
+
+	</select>
+
+	<select id="findByPage" resultType="cn.csbe.web.cms.offerings.bean.Offerings"
+		parameterType="cn.csbe.web.cms.offerings.bean.Offerings">
+		select a.* from offerings a
+		<where>
+			<trim prefix="(" suffix=")" prefixOverrides="and">
+				<if test="offeringsName != null">
+					and a.offeringsName like CONCAT('%',#{offeringsName},'%' )
+				</if>
+			</trim>
+			and a.status = 1
+		</where>
+		<!-- ORDER BY PinYinInitial -->
+		order by a.createtime desc
+		LIMIT #{beginIndex},#{rows}
+	</select>
+
+	<select id="findCount" resultType="java.lang.Long"
+		parameterType="cn.csbe.web.cms.offerings.bean.Offerings">
+		select count(0) from offerings a
+		<where>
+			<trim prefix="(" suffix=")" prefixOverrides="and">
+				<if test="offeringsName != null">
+					and a.offeringsName like CONCAT('%',#{offeringsName},'%' )
+				</if>
+			</trim>
+			and a.status = 1
+		</where>
+	</select>
+
+	<insert id="insert" parameterType="cn.csbe.web.cms.offerings.bean.Offerings">
+		insert into offerings
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="offeringsName != null">
+				offeringsName,
+			</if>
+			<if test="imgUrl != null">
+				imgUrl,
+			</if>
+			<if test="meritCoin != null">
+				meritCoin,
+			</if>
+			<if test="type != null">
+				type,
+			</if>
+			<if test="createTime != null">
+				createTime,
+			</if>
+			<if test="content != null">
+				content,
+			</if>
+		</trim>
+
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="offeringsName != null">
+				#{offeringsName},
+			</if>
+			<if test="imgUrl != null">
+				#{imgUrl},
+			</if>
+			<if test="meritCoin != null">
+				#{meritCoin},
+			</if>
+			<if test="type != null">
+				#{type},
+			</if>
+			<if test="createTime != null">
+				#{createTime},
+			</if>
+			<if test="content != null">
+				#{content},
+			</if>
+		</trim>
+
+	</insert>
+
+	<update id="update" parameterType="cn.csbe.web.cms.offerings.bean.Offerings">
+		update offerings
+		<set>
+			<if test="offeringsName != null">
+				offeringsName = #{offeringsName},
+			</if>
+			<if test="imgUrl != null">
+				imgUrl = #{imgUrl},
+			</if>
+			<if test="meritCoin != null">
+				meritCoin = #{meritCoin},
+			</if>
+			<if test="type != null">
+				type = #{type},
+			</if>
+			<if test="updateTime != null">
+				updateTime = #{updateTime},
+			</if>
+			<if test="status != null">
+				status = #{status},
+			</if>
+			<if test="content != null">
+				content = #{content},
+			</if>
+		</set>
+		where offeringsId = #{offeringsId}
+	</update>
+</mapper>

@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.csbe.web.cms.book.mapper.IPubBookMapper">
+
+	<select id="findById" resultType="cn.csbe.web.cms.book.bean.PubBook"
+		parameterType="java.lang.Integer">
+		select * from pub_book a
+		WHERE a.bookId = #{bookId}
+	</select>
+
+	<select id="findByPage" resultType="cn.csbe.web.cms.book.bean.PubBook"
+		parameterType="cn.csbe.web.cms.book.bean.PubBook">
+		select * from pub_book a
+		<where>
+			<trim prefix="(" suffix=")" prefixOverrides="or">
+
+				<if test="bookTitle != null">
+					or a.bookTitle like CONCAT('%',#{bookTitle},'%' )
+				</if>
+			</trim>
+			and a.status = 1
+		</where>
+		<!-- ORDER BY PinYinInitial -->
+		order by publishDate desc
+		LIMIT #{beginIndex},#{rows}
+	</select>
+
+	<select id="findMaxId" resultType="java.lang.Integer">
+		select max(bookId) from
+		pub_book
+	</select>
+
+	<select id="findCount" resultType="java.lang.Long"
+		parameterType="cn.csbe.web.cms.book.bean.PubBook">
+		select count(0) from pub_book a
+		<where>
+			<trim prefix="(" suffix=")" prefixOverrides="or">
+				<if test="bookTitle != null">
+					or a.bookTitle like CONCAT('%',#{bookTitle},'%' )
+				</if>
+			</trim>
+			and a.status = 1
+		</where>
+	</select>
+
+	<insert id="insert" parameterType="cn.csbe.web.cms.book.bean.PubBook">
+		insert into pub_book
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="bookTitle != null">
+				bookTitle,
+			</if>
+			<if test="bookIntroduction != null">
+				bookIntroduction,
+			</if>
+			<if test="bookContent != null">
+				bookContent,
+			</if>
+			<if test="htmlUrl != null">
+				htmlUrl,
+			</if>
+			<if test="picture != null">
+				picture,
+			</if>
+			<if test="publishDate != null">
+				publishDate,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="bookTitle != null">
+				#{bookTitle},
+			</if>
+			<if test="bookIntroduction != null">
+				#{bookIntroduction},
+			</if>
+			<if test="bookContent != null">
+				#{bookContent},
+			</if>
+			<if test="htmlUrl != null">
+				#{htmlUrl},
+			</if>
+			<if test="picture != null">
+				#{picture},
+			</if>
+			<if test="publishDate != null">
+				#{publishDate},
+			</if>
+		</trim>
+	</insert>
+
+<update id="update" parameterType="cn.csbe.web.cms.book.bean.PubBook">
+		update pub_book
+		<set>
+			<if test="bookTitle != null">
+				bookTitle = #{bookTitle},
+			</if>
+			<if test="bookIntroduction != null">
+				bookIntroduction = #{bookIntroduction},
+			</if>
+			<if test="picture != null">
+				picture = #{picture},
+			</if>
+			<if test="bookContent != null">
+				bookContent = #{bookContent},
+			</if>
+			<if test="htmlUrl != null">
+				htmlUrl = #{htmlUrl},
+			</if>
+			<if test="publishDate!=null">
+			   publishDate=#{publishDate},
+			</if>
+			<if test="status != null">
+				status = #{status},
+			</if>
+		</set>
+		where bookId = #{bookId}
+	</update>
+	
+	
+</mapper>

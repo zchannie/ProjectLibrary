@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.csbe.web.cms.wallpager.mapper.IPubThemeMapper">
+
+   <select id="findAll" resultType="cn.csbe.web.cms.wallpager.bean.PubTheme">
+		select themeId,themeName from pub_theme where type=0
+	</select>
+
+	<select id="findById" resultType="cn.csbe.web.cms.wallpager.bean.PubTheme"
+		parameterType="java.lang.Integer">
+		select * from pub_theme a
+		WHERE a.themeId = #{themeId}
+	</select>
+
+	<select id="findByPage" resultType="cn.csbe.web.cms.wallpager.bean.PubTheme"
+		parameterType="cn.csbe.web.cms.wallpager.bean.PubTheme">
+		select b.* from pub_theme b
+		<where>
+			<trim prefix="(" suffix=")" prefixOverrides="or">
+				<if test="themeName != null">
+					or b.themeName like CONCAT('%',#{themeName},'%' )
+				</if>
+				<if test="type != null">
+					or b.type =#{type}
+				</if>
+			</trim>
+			and b.status = 1
+		</where>
+		ORDER BY b.createTime desc
+		LIMIT #{beginIndex},#{rows}
+	</select>
+
+	<select id="findMaxId" resultType="java.lang.Integer">
+		select max(themeId) from pub_theme
+	</select>
+
+	<select id="findCount" resultType="java.lang.Long"
+		parameterType="cn.csbe.web.cms.wallpager.bean.PubTheme">
+		select count(0) from pub_theme a
+		<where>
+			<trim prefix="(" suffix=")" prefixOverrides="or">
+				<if test="themeName != null">
+					or a.themeName like CONCAT('%',#{themeName},'%' )
+				</if>
+			</trim>
+			and a.status = 1
+		</where>
+	</select>
+
+	<insert id="insert" parameterType="cn.csbe.web.cms.wallpager.bean.PubTheme">
+		insert into pub_theme
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="themeName != null">
+				themeName,
+			</if>
+			<if test="themeContent != null">
+				themeContent,
+			</if>
+			<if test="themeImg != null">
+				themeImg,
+			</if>
+			<if test="previewTotal != null">
+				previewTotal,
+			</if>
+			<if test="zanTotal != null">
+				zanTotal,
+			</if>
+			<if test="downloadTotal != null">
+				downloadTotal,
+			</if>
+			<if test="type != null">
+				type,
+			</if>
+			<if test="htmlUrl != null">
+				htmlUrl,
+			</if>
+			<if test="createTime != null">
+				createTime,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="themeName != null">
+				#{themeName},
+			</if>
+			<if test="themeContent != null">
+				#{themeContent},
+			</if>
+			<if test="themeImg != null">
+				#{themeImg},
+			</if>
+			<if test="previewTotal != null">
+				#{previewTotal},
+			</if>
+			<if test="zanTotal != null">
+				#{zanTotal},
+			</if>
+			<if test="downloadTotal != null">
+				#{downloadTotal},
+			</if>
+			<if test="type != null">
+				#{type},
+			</if>
+			<if test="htmlUrl != null">
+				#{htmlUrl},
+			</if>
+			<if test="createTime != null">
+				#{createTime},
+			</if>
+		</trim>
+	</insert>
+
+	<update id="update" parameterType="cn.csbe.web.cms.wallpager.bean.PubTheme">
+		update pub_theme
+		<set>
+			<if test="themeName != null">
+				themeName=#{themeName},
+			</if>
+			<if test="themeContent != null">
+				themeContent=#{themeContent},
+			</if>
+			<if test="themeImg != null">
+				themeImg=#{themeImg},
+			</if>
+			<if test="previewTotal != null">
+				previewTotal=#{previewTotal},
+			</if>
+			<if test="zanTotal != null">
+				zanTotal=#{zanTotal},
+			</if>
+			<if test="downloadTotal != null">
+				downloadTotal=#{downloadTotal},
+			</if>
+			<if test="status != null">
+				status=#{status},
+			</if>
+			<if test="type != null">
+				type=#{type},
+			</if>
+			<if test="htmlUrl != null">
+				htmlUrl=#{htmlUrl},
+			</if>
+		</set>
+		where themeId = #{themeId}
+	</update>
+</mapper>

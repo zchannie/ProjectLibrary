@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.csbe.web.cms.wallpager.mapper.IWallpagerMapper">
+
+	<select id="findById" resultType="cn.csbe.web.cms.wallpager.bean.PubWallpaper"
+		parameterType="java.lang.Integer">
+		select * from pub_wallpaper a
+		WHERE a.id = #{id}
+	</select>
+
+	<select id="findByPage" resultType="cn.csbe.web.cms.wallpager.bean.PubWallpaper"
+		parameterType="cn.csbe.web.cms.wallpager.bean.PubWallpaper">
+		select b.* from pub_wallpaper b
+		where b.status = 1
+		<!-- ORDER BY PinYinInitial -->
+		LIMIT #{beginIndex},#{rows}
+	</select>
+
+	<select id="findMaxId" resultType="java.lang.Integer">
+		select max(id) from pub_wallpaper
+	</select>
+
+	<select id="findCount" resultType="java.lang.Long"
+		parameterType="cn.csbe.web.cms.wallpager.bean.PubWallpaper">
+		select count(0) from pub_wallpaper a
+		where  a.status = 1
+	</select>
+
+	<insert id="insert" parameterType="cn.csbe.web.cms.wallpager.bean.PubWallpaper">
+		insert into pub_wallpaper
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="picture != null">
+				picture,
+			</if>
+			<if test="thumbnail != null">
+				thumbnail,
+			</if>
+			<if test="pid != null">
+				pid,
+			</if>
+			<if test="collectionTotal != null">
+				collectionTotal,
+			</if>
+			<if test="zanTotal != null">
+				zanTotal,
+			</if>
+			<if test="downloadTotal != null">
+				downloadTotal,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="picture != null">
+				#{picture},
+			</if>
+			<if test="thumbnail != null">
+				#{thumbnail},
+			</if>
+			<if test="pid != null">
+				#{pid},
+			</if>
+			<if test="collectionTotal != null">
+				#{collectionTotal},
+			</if>
+			<if test="zanTotal != null">
+				#{zanTotal},
+			</if>
+			<if test="downloadTotal != null">
+				#{downloadTotal},
+			</if>
+		</trim>
+	</insert>
+
+	<update id="update" parameterType="cn.csbe.web.cms.wallpager.bean.PubWallpaper">
+		update pub_wallpaper
+		<set>
+			<if test="picture != null">
+				picture=#{picture},
+			</if>
+			<if test="thumbnail != null">
+				thumbnail=#{thumbnail},
+			</if>
+			<if test="pid != null">
+				pid=#{pid},
+			</if>
+			<if test="collectionTotal != null">
+				collectionTotal=#{collectionTotal},
+			</if>
+			<if test="zanTotal != null">
+				zanTotal=#{zanTotal},
+			</if>
+			<if test="downloadTotal != null">
+				downloadTotal=#{downloadTotal},
+			</if>
+			<if test="status != null">
+				status=#{status},
+			</if>
+		</set>
+		where id = #{id}
+	</update>
+</mapper>
